@@ -1,18 +1,16 @@
 import './App.css';
-import {BrowserRouter , Routes , Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navbar from './Components/Navbar'; // Create or adjust this// Create this
+import Home from './Components/Home';
+import Courses from './Components/Courses';
 import Login from './Components/login';
 import Register from './Components/register';
 import Course from './Components/course';
-import Courses from './Components/Courses';
 import Profile from './Components/profile';
 import Learnings from './Components/learnings';
-import Home from './Components/Home';
 import AddCourse from './Components/AddCourse';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Dashboard from './Components/DashBoard/Dashboard';
-import 'boxicons/css/boxicons.min.css';
 import EditCourse from './Components/EditCourses';
+import Dashboard from './Components/DashBoard/Dashboard';
 import DUsers from './Components/DashBoard/DUsers';
 import DCourses from './Components/DashBoard/DCourses';
 import Assessment from './Components/Assessment';
@@ -20,38 +18,51 @@ import ErrorPage from './Components/ErrorPage';
 import AddQuestions from './Components/AddQuestions';
 import Performance from './Components/DashBoard/Performance';
 import DTutors from './Components/DashBoard/DTutors';
-import certificate from './Components/certificate';
+import Certificate from './Components/certificate';
 import Forum from './Components/forum';
-
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'boxicons/css/boxicons.min.css';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Routes>
-          <Route path="/addquestions/:id" element={<AddQuestions/>}/>
-          <Route path='/dashboard' Component={Dashboard}></Route>
-          <Route path='/login' Component={Login}></Route>
-          <Route path='/register' Component={Register}></Route>
-          <Route path='/' Component={Home}></Route>
-          <Route path='/courses' Component={Courses}></Route>
-          <Route path='/course/:id' Component={Course}></Route>
-          <Route path='/discussion/:id' Component={Forum}></Route>
-          <Route path='/certificate/:id' Component={certificate}></Route>
-          <Route path='/assessment/:id' Component={Assessment}></Route>
-          <Route path='/addcourse' Component={AddCourse}></Route>
-          <Route path='/editCourse/:id' Component={EditCourse}></Route>
-          <Route path='/profile' Component={Profile}></Route>
-          <Route path='/Learnings' Component={Learnings}></Route>
-          <Route path='/Dcourses' Component={DCourses}></Route>
-          <Route path='/Dusers' Component={DUsers}></Route>
-          <Route path='/Dtutors' Component={DTutors}></Route>
-          <Route path='/Performance' Component={Performance} />
-          <Route path='*' Component={ErrorPage}></Route>
-        </Routes>
+        <Navbar/>
+        <div className="main-content">
+          <header className="header">
+            <h2>Learning Management System</h2>
+            <div className="user-actions">
+              <button>Logout</button>
+            </div>
+          </header>
+          <Routes>
+            <Route path="/addquestions/:id" element={<AddQuestions />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/course/:id" element={<Course />} />
+            <Route path="/discussion/:id" element={<Forum />} />
+            <Route path="/certificate/:id" element={<Certificate />} />
+            <Route path="/assessment/:id" element={<Assessment />} />
+            <Route path="/addcourse" element={<AddCourse />} />
+            <Route path="/editCourse/:id" element={<EditCourse />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/Learnings" element={<Learnings />} />
+            <Route path="/Dcourses" element={<DCourses />} />
+            <Route path="/Dusers" element={<DUsers />} />
+            <Route path="/Dtutors" element={<DTutors />} />
+            <Route path="/Performance" element={<Performance />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </div>
+        <footer>
+          <p>&copy; 2025 Learning Management System. All rights reserved.</p>
+        </footer>
+        <ToastContainer />
       </BrowserRouter>
-      <ToastContainer/>
     </div>
   );
 }

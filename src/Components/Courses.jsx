@@ -9,11 +9,16 @@ function Courses() {
   const [courses, setCourses] = useState([]);
   const userId = localStorage.getItem("id");
   const navigate = useNavigate();
-  const [enrolled, SetEnrolled] = useState([]);
+  const [enrolled, setEnrolled] = useState([]);
   const authToken = localStorage.getItem("token");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Backend base URL from environment variable or fallback to localhost
+  const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/courses")
+    // Fetch all courses
+    fetch(`${BASE_URL}/api/courses`)
       .then((response) => response.json())
       .then((data) => {
         setCourses(data);
@@ -22,22 +27,24 @@ function Courses() {
         console.error("Error fetching data:", error);
       });
 
+    // Fetch enrolled courses for logged in user
     if (userId) {
-      fetch(`http://localhost:8080/api/learning/${userId}`)
+      fetch(`${BASE_URL}/api/learning/${userId}`)
         .then((response) => response.json())
         .then((data) => {
           let arr = [];
           for (let i = 0; i < data.length; i++) {
             arr.push(data[i].course_id);
           }
-          SetEnrolled(arr);
+          setEnrolled(arr);
         })
         .catch((error) => {
           console.error("Error fetching enrolled courses:", error);
         });
     }
-  }, [userId]);
+  }, [userId, BASE_URL]);
 
+  // Load Razorpay checkout script dynamically
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       if (document.getElementById("razorpay-script")) {
@@ -53,6 +60,7 @@ function Courses() {
     });
   };
 
+  // Enroll course with payment
   async function enrollCourse(courseId, price) {
     if (!authToken) {
       toast.error("You need to login to continue", {
@@ -66,18 +74,20 @@ function Courses() {
       return;
     }
 
+    setIsProcessing(true);
+
     const res = await loadRazorpayScript();
     if (!res) {
       alert("Razorpay SDK failed to load. Check your connection.");
+      setIsProcessing(false);
       return;
     }
 
     try {
-      // Create Razorpay order on backend with the course price
-      const orderResponse = await axios.post(
-        "http://localhost:8080/api/payments/createOrder",
-        { amount: price }
-      );
+      // Create Razorpay order on backend
+      const orderResponse = await axios.post(`${BASE_URL}/api/payments/createOrder`, {
+        amount: Number(price), // ensure number type
+      });
       const orderData = orderResponse.data;
 
       const options = {
@@ -90,28 +100,25 @@ function Courses() {
         handler: async function (response) {
           try {
             // Verify payment on backend
-            await axios.post("http://localhost:8080/api/payments/verify", {
+            await axios.post(`${BASE_URL}/api/payments/verify`, {
               razorpayPaymentId: response.razorpay_payment_id,
               razorpayOrderId: response.razorpay_order_id,
               razorpaySignature: response.razorpay_signature,
             });
 
-            // After successful payment verification, enroll the user
+            // Enroll user after successful payment
             const enrollRequest = {
               userId: userId,
               courseId: courseId,
             };
-            const enrollResponse = await axios.post(
-              "http://localhost:8080/api/learning",
-              enrollRequest
-            );
+            const enrollResponse = await axios.post(`${BASE_URL}/api/learning`, enrollRequest);
 
             if (enrollResponse.data === "Enrolled successfully") {
               toast.success("Course enrolled successfully!", {
                 position: "top-right",
                 autoClose: 1500,
               });
-              SetEnrolled((prev) => [...prev, courseId]); // update enrolled list in state
+              setEnrolled((prev) => [...prev, courseId]);
               setTimeout(() => {
                 navigate(`/course/${courseId}`);
               }, 2000);
@@ -133,6 +140,8 @@ function Courses() {
     } catch (error) {
       console.error("Error in payment process:", error);
       toast.error("Payment initiation failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
     }
   }
 
@@ -144,7 +153,7 @@ function Courses() {
           <div key={course.course_id} className="course-card">
             <img
               src={course.p_link}
-              alt={course.course_name}
+              alt={course.courseName}
               className="course-image"
             />
             <div className="course-details">
@@ -173,9 +182,10 @@ function Courses() {
             ) : (
               <button
                 className="enroll-button"
+                disabled={isProcessing}
                 onClick={() => enrollCourse(course.course_id, course.price)}
               >
-                Enroll
+                {isProcessing ? "Processing..." : "Enroll"}
               </button>
             )}
           </div>

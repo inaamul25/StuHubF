@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {useNavigate } from 'react-router-dom';
+import "./css/style.css";
 
 function AddCourse() {
   const navigate  = useNavigate();

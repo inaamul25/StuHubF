@@ -2,7 +2,7 @@ import React from "react";
 import { useUserContext } from "./UserContext";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
-import logo from "./images/StuHubLogo.jpg";
+import logo from "./images/logo.png";
 import c1 from "./images/c1.jpg";
 import c2 from "./images/html.png";
 import c3 from "./images/sql.jpg";
@@ -32,7 +32,7 @@ function Home() {
       <Navbar page={"home"} />
       <div>
         <section id="home">
-          <h2>Enhance your future with EduVerse Academy</h2>
+          <h2>Enhance your future with StuHub</h2>
           <p>
             {" "}
             OneYes Academy is a massive open online course provider, and its

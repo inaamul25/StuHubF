@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Confetti from "react-dom-confetti";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import img from './images/StuHubLogo.jpg';
+import img from './images/logo.png';
 import seal from './images/seal.png'
 
 const Certificate = () => {

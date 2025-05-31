@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import logo from "./images/StuHubLogo.jpg";
+import logo from "./images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faChalkboardUser } from "@fortawesome/free-solid-svg-icons";
 
@@ -32,12 +32,12 @@ function Navbar(props) {
     <div>
       <nav>
         <div className="logo1">
-          <img src={logo} alt="" />
+          <img src={logo} alt="StuHub Logo" />
         </div>
         <div className="navigation">
           <div id="menu-btn">
             <div className="menu-dash" onClick={toggleMobileMenu}>
-              &#9776;
+              ☰
             </div>
           </div>
           <i
@@ -51,76 +51,44 @@ function Navbar(props) {
                 <button onClick={closeMobileMenu}>X</button>
               </li>
             )}
-            {value === "home" ? (
-              <li className={value === "home" ? "active-home" : ""}>
-                <Link to={"/"}>
-                  Home
-                </Link>
-              </li>
-            ) : (
-              <li>
-                <Link to={"/"}>Home</Link>
-              </li>
-            )}
-            {value === "courses" ? (
-              <li className={value === "courses" ? "active-courses" : ""} >
-                <Link
-                  to={"/courses"}
-                  
-                >
-                  Courses
-                </Link>
-              </li>
-            ) : (
-              <li>
-                <Link to={"/courses"}>Courses</Link>
-              </li>
-            )}
-            {authToken ? (
-              value === "profile" ? (
-                <li style={{ backgroundColor: "purple", borderRadius: "5px" }}>
-                  <Link
-                    to={"/profile"}
-                    style={{ color: "white", padding: "10px" }}
-                  >
+            <li className={value === "home" ? "active" : ""}>
+              <Link to="/">Home</Link>
+            </li>
+            <li className={value === "courses" ? "active" : ""}>
+              <Link to="/courses">Courses</Link>
+            </li>
+            {authToken && (
+              <>
+                <li className={value === "profile" ? "active" : ""}>
+                  <Link to="/profile">
                     Profile
                     <FontAwesomeIcon icon={faUser} />
                   </Link>
                 </li>
-              ) : (
-                <li>
-                  <Link to={"/profile"}>
-                    Profile
-                    <FontAwesomeIcon icon={faUser} />
+                <li className={value === "learnings" ? "active" : ""}>
+                  <Link to="/learnings">
+                    Learnings
+                    <FontAwesomeIcon icon={faChalkboardUser} />
                   </Link>
                 </li>
-              )
-            ) : (
-              <></>
+              </>
             )}
+            <li className={value === "privacy" ? "active" : ""}>
+              <Link to="/privacy">Privacy</Link>
+            </li>
+            <li className={value === "terms" ? "active" : ""}>
+              <Link to="/terms">Terms</Link>
+            </li>
+            <li className={value === "refunds" ? "active" : ""}>
+              <Link to="/refunds">Refunds</Link>
+            </li>
+            <li className={value === "shipping" ? "active" : ""}>
+              <Link to="/shipping">Shipping</Link>
+            </li>
+            <li className={value === "contact" ? "active" : ""}>
+              <Link to="/contactus">Contact Us</Link>
+            </li>
             {authToken ? (
-              value === "learnings" ? (
-                <li style={{ backgroundColor: "purple", borderRadius: "5px" }}>
-                  <Link
-                    to={"/learnings"}
-                    style={{ color: "white", padding: "10px" }}
-                  >
-                    Learnings
-                    <FontAwesomeIcon icon={faChalkboardUser} />
-                  </Link>
-                </li>
-              ) : (
-                <li>
-                  <Link to={"/learnings"}>
-                    Learnings
-                    <FontAwesomeIcon icon={faChalkboardUser} />
-                  </Link>
-                </li>
-              )
-            ) : (
-              <></>
-            )}
-            {authToken !== null ? (
               <li>
                 <button onClick={handleLogOut} className="sign-out-button">
                   Sign Out
